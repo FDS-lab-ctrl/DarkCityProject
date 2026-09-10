@@ -1,0 +1,114 @@
+DARK CITY - A5.6 - POLICIA, EMS, PANICO Y MAPA
+============================================================
+Paquete ACUMULATIVO sobre A5.5. Incluye los cambios anteriores.
+Candidato para prueba en la copia experimental, no version validada en Godot.
+
+INSTALACION
+Cierra el juego. Respalda tus partidas importantes antes de instalar.
+Extrae este ZIP en la raiz de la COPIA EXPERIMENTAL, junto a project.godot.
+Acepta reemplazar archivos. Abre solamente Play Dark City.cmd.
+No se agrega ni cambia ningun CMD. No hay que instalar parches anteriores.
+No hay que reiniciar la ciudad ni borrar las partidas para aplicar el codigo.
+New Game sirve para verificar patrullas iniciales, no es obligatorio para todo.
+
+IMPORTANTE SOBRE PARTIDAS
+No se cambia la carpeta user://. Copiar el proyecto no garantiza que sus
+partidas sean independientes de las del original. Conserva una copia del
+save ANTERIOR a A5.6. La reversion incluida restaura codigo, no revierte las
+acciones, heridas, llamadas, detenciones ni migraciones de una partida.
+
+CAMBIOS
+1. Una operacion policial persistente mantiene el control al terminar una
+   amenaza armada. Rendirse cambia de combate a arresto; no libera al agente
+   para volver a una tarea normal. Trabajo y relevo esperan la resolucion.
+   El seguimiento de una persona observada no exige conocer su nombre.
+2. Arresto dentro de la comisaria: escolta directa a la celda usando la
+   geometria de la estacion, sin exigir un patrullero ni dar una vuelta.
+   Agente sin coche fuera de la estacion: custodia y solicitud de transporte
+   por una unidad real; nunca se crea un vehiculo sustituto.
+3. Registro comun de telefonos: cabinas y telefonos de interiores accesibles.
+   Los negocios se incluyen aunque no sean el interior activo del jugador.
+   Viviendas privadas conservan restricciones de acceso. Cada llamada exige
+   llegada y uso del punto fisico, o viaje/uso equivalente cuando esta lejos.
+4. Un responsable por reporte, reserva temporal y reasignacion si no puede
+   continuar. Primero huir/protegerse; no seguir llamando bajo amenaza directa.
+5. Herido visto: caso medico y busqueda de ayuda. No se inventa un testigo.
+   No se repite la llamada si otra unidad ya atiende a la misma persona.
+   Ponerse de pie no cancela una necesidad critica ni una hemorragia conocida.
+   Un paciente ya ingresado no genera nuevas ambulancias desde el hospital.
+6. EMS REQUESTED = reporte hecho. EMS ASSIGNED = unidad asignada.
+   EMS ON ROUTE = viaje iniciado. EMS ON SCENE = llegada.
+   EMS STAGING - SCENE UNSAFE = espera por riesgo observado/reportado.
+   Wanted por si solo no convierte una escena en peligrosa.
+7. Los medicos siguen el lugar comunicado y las observaciones propias; no
+   persiguen al paciente invisible por toda la ciudad mediante sus coordenadas.
+8. Algunos testigos disponibles pueden quedarse cerca del herido esperando
+   ayuda cuando no hay peligro. No realizan curaciones magicas. Ceden el
+   espacio a los medicos y vuelven a huir si reaparece una amenaza.
+9. Con Wanted > 0, puntos AZULES para patrulleros y VERDES para ambulancias,
+   en mapa y minimapa. Incluyen reservas del registro de vehiculos, no solo
+   unidades asignadas. Posicion fisica si existe, ruta logica si viaja lejos,
+   registro persistente si esta aparcado. El mapa no crea ni mueve vehiculos.
+   El minimapa recorta a su area visible. Los puntos muy cercanos pueden
+   superponerse; aumenta el zoom para distinguir coches en la misma base.
+10. Compatibilidad incremental de reportes, recuerdos y custodia. Las tareas
+    suspendidas no ganan progreso mientras el personaje atiende la emergencia.
+
+PRUEBAS PRIORITARIAS EN TU PC
+A. Amenaza a un agente en comisaria y usa Surrender. Debe pasar a arresto y
+   escolta, no volver al trabajo ni exigirte subir a un coche afuera.
+B. Fuera de comisaria, huye desarmado y deja que te alcance. Comprueba
+   custodia, escolta al coche, traslado y procesamiento fisicos.
+C. Deja un herido vivo delante de civiles junto a un negocio accesible.
+   Comprueba huida primero, uso real del telefono/cabina o aviso a un agente,
+   mensajes EMS y llegada de la unidad. Repite acercandote al testigo: debe
+   priorizar sobrevivir, y otro testigo puede hacerse cargo del aviso.
+D. Con Wanted, abre el mapa y observa puntos azules/verdes en bases y rutas.
+   Sigue un punto al acercarte para contrastarlo con el vehiculo real.
+E. Comprueba que una ambulancia espere si hay tiros y retome al cesar el
+   peligro, sin que Wanted activo por si solo bloquee la asistencia.
+F. Guarda/carga durante reporte, custodia y desplazamiento EMS. Verifica
+   que no se dupliquen casos/unidades ni se pierda la fase.
+G. Regresion: arranque, atropello/get-up, evasiones, trafico dirigido y heridas.
+
+VERIFICACION REALIZADA AQUI
+- 181 comprobaciones estaticas, estructurales, de contratos y modelos aislados.
+- JSON, referencias nuevas, delimitadores y ausencia de funciones duplicadas.
+- Candidatos de telefono calculados sobre los datos de 104 interiores, que
+  incluyen los 43 edificios de tiendas del catalogo suministrado.
+- Comparacion con A5.5 y conservacion byte a byte de router dirigido,
+  vehicle_body, impacto, recuperacion y restauracion de heridas aprobados.
+- Integridad del ZIP acumulativo y paquete de reversion.
+NO se ejecuto el motor Godot, NO hubo comprobacion del parser real, NO se
+midieron FPS y NO se verificaron las animaciones/layouts en juego aqui.
+Las comprobaciones estaticas no sustituyen las pruebas anteriores.
+
+TELEFONOS / LIMITACION DE ASSETS
+Los Modelos completos no estaban en Sistema.rar. Los caminos del telefono
+shop_030_payphone se comprobaron en el tree, no se inspeccionaron sus bytes.
+El codigo reutiliza telefonos ya colocados o ese asset existente, valida
+pared/espacio y ajusta el montaje con sus bounds reales, sin estirar mallas.
+Si el recurso falta, es demasiado grande o no hay montaje valido, registra
+MISSING_PHYSICAL_LANDLINE_BINDING / PHONE_APPROACH_BLOCKED y busca otra opcion.
+No dibuja cubos flotantes. Un mesh sin auricular separado conserva su geometria;
+el gesto usa un punto de apoyo, no inventa una pieza visible nueva.
+Todos los negocios tienen candidatos, pero eso NO demuestra que todos los
+montajes superen la prueba fisica/visual en la instalacion completa.
+
+ALCANCE Y PENDIENTES
+Se conserva la flota/turnos/patrullaje anterior; no se agregan efectivos para
+forzar 3 patrullas cuando no hay tripulacion. La cobertura inicial y road_028
+siguen pendientes de verificacion/conexion vial; no se inventaron calles.
+Se reutilizan las poses y transportes existentes. No se crean animaciones
+nuevas de reduccion/esposado, IA tactica avanzada ni flota forense.
+La prioridad medica/custodia combinada y escenas con muchas victimas necesitan
+prueba en juego; no se certifican solo porque sus scripts pasen estos checks.
+No se silencian ni arreglan en este paquete los warnings de interpolacion.
+
+REVERSION
+Documentacion/Parche_A5_6/Volver_a_A5_5_codigo.zip restaura TODOS los archivos
+preexistentes que A5.6 modifica. Usarlo en la copia experimental cerrada.
+Los dos archivos nuevos quedan sin referencias al volver; pueden borrarse:
+Sistema/Scripts/landline_endpoint.gd
+Sistema/Datos/emergency_phones_a56.json
+Para recuperar la simulacion anterior, usa tambien el save respaldado antes.

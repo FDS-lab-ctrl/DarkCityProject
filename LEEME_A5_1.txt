@@ -1,0 +1,37 @@
+DARK CITY A5.1 - ACUMULATIVO SOBRE A5 (Y A4.2)
+================================================
+
+1. Cerrar el juego.
+2. Respaldar las partidas importantes. Esta copia puede compartir user:// con
+   el proyecto original; el parche NO cambia la carpeta de partidas.
+3. Extraer ESTE ZIP en la raiz de la copia EXPERIMENTAL, junto a project.godot
+   y Play Dark City.cmd. Reemplazar archivos. No instalar parches previos.
+4. Abrir Play Dark City.cmd como siempre. No hace falta reiniciar una partida
+   solo por esta correccion. New Game tambien debe iniciar normalmente.
+
+Este paquete incluye A1.1 + A1.2 + A2 + A3 + A4.2 + A5 + correcciones A5.1.
+No aplicar encima A4, A4.1 o un parche anterior despues de instalar este.
+
+PRUEBA PRINCIPAL
+Civiles amenazados huyen por terreno libre, incluida la calle; agentes en
+persecucion no buscan una senda si tienen paso directo libre. Las paredes,
+coches y ausencia de suelo siguen siendo obstaculos. El agente que recibe
+un tiro puede responder con su arma si esta consciente, capaz y con municion.
+No puede disparar desde ragdoll/incapacidad ni sin linea de tiro.
+
+REGISTROS OPCIONALES
+Probar A5.1.cmd abre el juego sin editor y guarda salida/errores en
+A5_1_Diagnostico dentro de ESTA copia. Incluye estados de combate y contadores.
+Comprobar A5.1.cmd ejecuta tests aislados (sin leer ni escribir partidas).
+Los tests no se ejecutaron en el entorno donde se preparo este ZIP.
+
+SI HAY REGRESION
+Cerrar el juego y extraer:
+Documentacion/Parche_A5_1/Volver_a_A5_codigo.zip
+sobre la copia experimental. Esto restaura los archivos A5 que A5.1 reemplazo.
+No restaura partidas. Los helpers nuevos quedan sin uso al volver al A5.
+
+DETALLE Y LIMITES
+Documentacion/Parche_A5_1/INFORME_A5_1.txt
+Documentacion/Parche_A5_1/Verificacion_A5_1.json
+Documentacion/Parche_A5_1/Cambios_A5_1.diff

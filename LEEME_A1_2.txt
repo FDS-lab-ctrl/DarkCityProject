@@ -1,0 +1,59 @@
+DARK CITY - A1.2 VEHICLE CONTINUITY + PARKING LIFECYCLE
+========================================================
+
+Este parche es ACUMULATIVO: incluye el A1.1 que ya funciono y agrega A1.2.
+Aplicar UNICAMENTE sobre la copia experimental de Dark City.
+
+ARCHIVOS INCLUIDOS
+------------------
+Sistema/Scripts/world_vehicles.gd            (A1.1)
+Sistema/Scripts/world_vehicle_index.gd       (A1.1)
+Sistema/Scripts/city_parking.gd              (A1.2)
+Sistema/Scripts/civil_vehicle_trip.gd        (A1.2)
+Sistema/Scripts/service_world.gd             (A1.2)
+
+QUE CORRIGE A1.2
+----------------
+- Mantiene el mismo vehiculo persistente durante ACCESS -> BOARDING -> DRIVING -> ALIGHTING -> FINAL_WALK.
+- Rechaza iniciar una rutina con un vehiculo inexistente o ya conducido por otra persona.
+- Si el coche fisico fue movido, elimina solo la ocupacion de parking obsoleta: NO lo teletransporta de vuelta.
+- Sincroniza el parking de destino real cuando una ruta cambia a un espacio alternativo.
+- Al pasar de representacion fisica a logica conserva el parking/ruta alternativos del mismo coche.
+- Si el espacio reservado deja de ser utilizable, busca otro espacio legal desde la posicion REAL actual del coche.
+- Si no puede construir la ruta hacia un parking alternativo, libera esa reserva y evita reintentarlo inmediatamente.
+- Un fallo al ocupar el espacio final ya no hace que la ruta fisica vuelva a arrancar desde el principio.
+- Si falla la ruta a pie hasta el coche, libera conductor/reserva correctamente y permite el fallback normal.
+- Reconcilia inconsistencias obvias entre parking guardado y registro del vehiculo sin mover vehiculos arbitrariamente.
+- El parking marca cambios persistentes correctamente al salir/liberar espacios.
+- El validador de parking ahora detecta referencias a vehiculos inexistentes y claims inconsistentes.
+
+NO HACE TODAVIA
+---------------
+- A2 carriles direccionales/intersecciones.
+- A3 atropellos/dano/ragdoll.
+- Migracion agresiva de coches viejos a nuevos estacionamientos.
+  Deliberadamente NO se hace: solo se corrigen claims demostrablemente obsoletos y nunca se mueve un coche para ocultar el problema.
+
+PRUEBA MANUAL RECOMENDADA
+-------------------------
+1. Ejecutar Play Dark City.cmd normalmente.
+2. Observar un NPC que tenga un coche estacionado.
+3. Debe salir/caminar hasta ESE coche existente.
+4. Debe entrar fisicamente y conducir ESE mismo coche.
+5. En destino debe usar parking real, estacionar, salir y continuar caminando.
+6. El coche debe quedarse donde fue estacionado cuando el NPC se aleja.
+7. Alejarse de la zona y volver: el mismo coche debe seguir siendo coherente con su estado persistente.
+8. Mirar varios viajes y, si ocurre naturalmente, algun destino con estacionamiento bloqueado.
+
+Tambien se puede ejecutar Probar continuidad.cmd como smoke test general, pero no sustituye la prueba visual de este A1.2.
+
+VALIDACION HECHA AQUI
+---------------------
+- Revision estatica de los cambios y diffs.
+- Balance basico de delimitadores en los cinco GDScript incluidos.
+- Comprobacion de rutas res:// literales referenciadas por los archivos modificados.
+- No se modificaron JSON ni assets.
+
+No hay Godot ejecutable en el entorno donde se preparo el parche, por lo que la prueba runtime real corresponde a Play Dark City.cmd en tu copia experimental.
+
+Si aparece un error, enviar el texto completo de la consola.

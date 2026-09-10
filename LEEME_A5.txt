@@ -1,0 +1,115 @@
+DARK CITY - A5 / PATRULLAS, RELEVO Y RESPUESTA URGENTE
+===================================================
+BASE: A4.2 aprobado por el usuario. PAQUETE ACUMULATIVO.
+Incluye el codigo de A1.1 + A1.2 + A2 + A3 + A4.2, con los cambios A5.
+No contiene modelos, texturas, fuentes, partidas ni la carpeta .godot.
+
+INSTALACION
+1. Cerrar el juego.
+2. Guardar una copia de las partidas importantes antes de probar.
+3. Descomprimir ESTE ZIP en la RAIZ de la copia experimental, donde estan
+   project.godot y Play Dark City.cmd. Aceptar reemplazar archivos.
+4. Abrir Play Dark City.cmd como siempre.
+5. Para comprobar el inicio con patrullas ya trabajando, elegir NEW GAME.
+   Una partida guardada se conserva y NO se redistribuye por teletransporte.
+
+ATENCION A LAS PARTIDAS
+La copia experimental separa los archivos del proyecto, no necesariamente
+los guardados. El proyecto usa user:// y conserva el mismo nombre de
+aplicacion. No se modifico esa configuracion en este parche. Mantener copia
+externa de las partidas; no sobrescribir manualmente una partida importante
+con una prueba. El menu existente archiva el autosave al elegir New Game.
+
+QUE CAMBIA
+- Gestor policial limitado a la flota y plantilla existentes.
+- Tres sectores de ruta: norte, centro/oeste y sur/puerto.
+- 140 puntos extraidos de las calles reales del mapa suministrado.
+- Hasta 3 patrullas normales, con dos agentes cada una, SI hay parejas aptas
+  presentes y de turno. Con menos parejas se combinan sectores.
+- Coches de reserva reales en comisaria; pueden servir al relevo o a una
+  llamada pendiente cuando hay personal libre. No se crean sustitutos.
+- Turno entrante disponible hasta 12 minutos de juego antes de la hora,
+  solo si llego realmente a su puesto. Sale en un coche de reserva.
+- El saliente espera a que su reemplazo este en PATROL, con tripulacion
+  dentro y al menos 30 m de la base. Entonces regresa para el relevo.
+- Al entrar en la comisaria se reconoce la llegada aunque ambos agentes ya
+  no esten juntos en el punto exacto de la puerta. El coche queda de reserva.
+- Si falta relevo, hay espera/horas extra con limite de 4 horas de juego o
+  agotamiento. No se retiene a una persona para siempre ni se inventa otra.
+- En New Game se coloca el estado inicial de los servicios de turno y se
+  inician patrullas con sus mismos agentes/coches, antes del control fisico.
+  La bandera sale explicitamente del menu New Game. Una carga de partida
+  vieja o la ausencia de un campo no autoriza reubicar a nadie.
+- Despacho desde la posicion actual de unidades disponibles y preparacion
+  estimada para alcanzar/subir al coche, no siempre desde la comisaria.
+- Tras resolver una llamada policial se puede retomar la ruta. Su WorkOrder
+  se completa con el recibo real de resolucion, sin exigir volver a la base.
+- Urgencia de policias y medicos al alcanzar vehiculo/escena, no solo cuando
+  el sospechoso esta cerca. No se corre llevando detenido o camilla.
+- Los bomberos reutilizan la urgencia de sus WorkOrders de emergencia.
+- Atajos cortos de respuesta a pie si el corredor esta libre y tiene suelo
+  valido. No se desactivan colisiones ni se atraviesan edificios.
+- Llamadas dentro de un edificio: primer acceso por su entrada real; luego
+  se usa el procedimiento policial/medico de interior ya existente.
+- La precarga de tripulantes cubre el radio del coche de servicio. Se evita
+  restaurar un tripulante como peaton mediante un spawn_snapshot antiguo.
+- Cada tramo nuevo reinicia el indice fisico de ruta y conserva la posicion
+  al interrumpirse; no vuelve al inicio del recorrido anterior.
+
+LIMITES REALES DE LOS DATOS
+El archivo de poblacion contiene 18 puestos POLICE y 7 patrulleros
+(6 regulares + 1 de reserva), NO 18 agentes simultaneamente disponibles.
+Turnos policiales existentes: 06-14, 14-22, 22-06, jefe 08-16 y relevos
+10-18/18-02. Hay dias libres 4_ON_2_OFF y roles de central/mando.
+No se cambiaron contratos, plantilla, propiedad ni cantidad de coches.
+Por eso 3 patrullas es un objetivo/maximo normal, no una promesa de tener
+3 a todas horas. Tampoco se puede prometer cobertura continua si no quedan
+agentes aptos de relevo. Esa falta queda visible en F12/diagnostico.
+
+La geometria entregada tiene tres segmentos de road_028 (Calle de las
+villas) desconectados de la red principal. Estan registrados como pendientes
+para no inventar una carretera atravesando terreno. Las rutas A5 cubren los
+74 segmentos conectados restantes; no se certifica cobertura de esa isla.
+
+PRUEBA RECOMENDADA
+A. New Game debe entrar normalmente, conservando la correccion de A4.2.
+B. Recorrer la ciudad y observar patrullas; F12 muestra unidades y turnos.
+C. Generar una denuncia/llamada como antes y observar la unidad que responde:
+   coche real -> parada -> salida -> desplazamiento urgente cuando procede.
+D. Observar un cambio de turno cuando ocurra. El saliente no debe desaparecer
+   ni volver antes de que salga el entrante, salvo falta de relevo/agotamiento.
+E. Guardar en un slot de prueba, cargar y comprobar identidad/ruta/ocupantes.
+
+DIAGNOSTICOS OPCIONALES
+Probar A5.cmd: abre el mismo menu del juego con registros. NO abre el editor.
+Guarda salida.log, errores.log y estado_servicios.json en A5_Diagnostico,
+DENTRO de la copia desde donde se ejecuto. La carpeta tiene .gdignore.
+El estado se escribe cada 10 segundos reales solo en este modo.
+Si algo falla, cerrar el juego y compartir esa carpeta comprimida.
+
+Comprobar A5.cmd: pruebas pequenas de la politica real con dobles de prueba.
+NO ejecuta la ciudad 3D, NO carga/modifica partidas, NO sustituye la prueba
+jugable. Requiere el Godot 4.4.1 que ya usa tu launcher.
+
+VERIFICACION REALIZADA AQUI
+- Integridad del ZIP A4.2 fuente.
+- Analisis gramatical GDScript de los scripts acumulativos y pruebas.
+- Validacion JSON, referencias nuevas, hashes y cobertura geometrica.
+- Comprobaciones estaticas de los guardas de inicio, reserva y relevo.
+- Pueblo_caminata.gd, WorldIncidents A4.2 y configuracion base conservados.
+
+NO se ejecuto Godot ni la ciudad completa en el entorno de preparacion.
+NO se certifica compilacion semantica del motor, animaciones, navegacion
+fisica, FPS o cambio de turno real. Esos resultados estan pendientes de
+prueba en tu PC. Ver Documentacion/Parche_A5/Verificacion.json.
+
+VOLVER A A4.2
+Dentro de Documentacion/Parche_A5 hay:
+  Volver_a_A4_2_codigo.zip
+Cerrar el juego y descomprimir ese ZIP en la raiz experimental, reemplazando.
+Restaura TODOS los archivos existentes que A5 modifico, incluyendo los que
+no estaban dentro del antiguo ZIP A4.2. Reinstalar solo el viejo ZIP A4.2 no
+restauraria esos archivos adicionales.
+Los archivos nuevos de A5 pueden quedar presentes pero inactivos.
+La reversion es de CODIGO; no revierte partidas creadas/modificadas con A5.
+Usar una partida de respaldo anterior para comparar comportamiento.

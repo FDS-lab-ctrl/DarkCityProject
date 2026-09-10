@@ -1,0 +1,6 @@
+A5.9.2 - CANDIDATO. Leer Documentacion/Parche_A5_9_2/LEEME.txt.
+
+Cerrar juego, respaldar proyecto y partidas, superponer el ZIP junto a project.godot.
+Abrir el mismo Play Dark City.cmd. No extraer el ZIP de reversion al instalar.
+Probar primero la partida bloqueada, sin guardar/cargar para destrabar.
+No se ha ejecutado Godot en el entorno donde se preparo este paquete.

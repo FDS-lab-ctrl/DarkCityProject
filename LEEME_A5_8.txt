@@ -1,0 +1,185 @@
+DARK CITY - A5.8 - NAVEGACION LOCAL Y RECUPERACION DE BLOQUEOS
+======================================================================
+ESTADO: CANDIDATO PARA PRUEBA. NO VALIDADO EN GODOT NI EN PARTIDA REAL.
+Acumulativo sobre A5.7, preparado sobre Dark City Project exp.rar.
+No se declara garantizada la eliminacion de todos los atascos ni un FPS.
+
+INSTALACION - UN SOLO ZIP
+-------------------------
+1. Cierra el juego y el editor.
+2. Respalda la COPIA EXPERIMENTAL y las partidas ANTES de probar. La copia
+   experimental puede compartir user:// y guardados con el proyecto original.
+3. Extrae Dark_City_A5_8_Dynamic_Navigation_Recovery_Cumulative.zip en la
+   raiz de esa copia, JUNTO A project.godot. Acepta reemplazar archivos.
+   Conserva las demas carpetas: no borres Sistema para sustituirlo entero.
+4. Abre el MISMO Play Dark City.cmd. No se crea ni modifica ningun CMD.
+5. Carga primero la misma partida donde quedaron los NPCs/coches trabados.
+   No hace falta crear una partida nueva ni borrar datos para instalarlo.
+
+Esta base coincide con los archivos A5.7 presentes en el RAR enviado.
+Si hiciste cambios despues de enviarlo, compara antes de sobrescribirlos:
+este paquete no conoce esas modificaciones posteriores. No es el juego
+completo y necesita el resto de tu proyecto y sus modelos ya instalados.
+
+QUE SE MODIFICA
+----------------
+PEATONES
+- Sustituye la decision basada en un unico rayo central por comprobaciones
+  de volumen y apoyo en el suelo. Se comprueba el ancho del cuerpo.
+- Conserva temporalmente un punto de desvio para reducir el cambio continuo
+  izquierda/derecha ante el mismo obstaculo.
+- Mide el progreso hacia el objetivo. Si el rodeo sencillo no resuelve el
+  bloqueo, intenta un camino local acotado y comprueba sus segmentos.
+- El camino local se revalida mientras se recorre: otro NPC puede ocuparlo.
+- La misma capa se usa en interiores, puertas, accesos al coche y movimientos
+  de servicio/custodia. Se elimina el bypass general por cercania al destino.
+- Se conserva el movimiento de emergencia existente; se filtra su intencion
+  local. Una persecucion puede acercarse a su objetivo real sin confundirlo
+  con un peaton cualquiera. No se desplaza directamente el cuerpo.
+- Las esperas de cruce/actividad no se tratan como tiempo de atasco. Un camino
+  global vacio puede reintentarse; los reintentos tienen intervalo.
+
+VEHICULOS
+- Comprueba un volumen de coche sobre una aproximacion de su trayectoria
+  de giro. Tiene en cuenta dimensiones, orientacion y direccion de avance.
+- El espacio disponible limita la velocidad mediante una envolvente de
+  frenado conservadora. Un bloqueo inmediato no se anula para acelerar.
+- Un coche detenido pero controlado se trata como trafico, no como un objeto
+  estacionado que debe adelantarse. Los peatones provocan espera/frenado.
+- Solo se intenta un desvio lento cuando el corredor completo es libre y
+  las cuatro esquinas permanecen dentro del MISMO sentido de la calzada.
+  No hay permiso para usar veredas, contramano o un cruce como adelantamiento.
+- Una obstruccion fisica persistente puede informar temporalmente al router
+  del carril bloqueado y solicitar otro recorrido legal desde la posicion
+  actual. La revision del bloqueo invalida las rutas cacheadas anteriores.
+- El bloqueo temporal caduca. No se altera permanentemente el plano vial.
+- Se retira el reintento ciego anterior que no diferenciaba una cola de un
+  obstaculo. Las esperas de cruce/carga de terreno no disparan esa recuperacion.
+
+CRUCES
+- Una prioridad temporal decide quien puede intentar despejar el cruce.
+  Dos coches ya dentro no se ordenan ambos esperar solo por estar presentes.
+- Se prioriza despejar el interior, luego la llegada, con desempate estable.
+- Un propietario que no progresa pierde temporalmente la prioridad. Los
+  coches externos no se meten mientras los que estan dentro intentan salir.
+- Un coche manual/estacionado que ocupa el cruce sigue siendo un obstaculo.
+  Tener prioridad NO permite atravesarlo: la comprobacion fisica se mantiene.
+- La aproximacion fuera de la linea de solicitud no queda detenida antes de
+  poder pedir paso; se aproxima con la limitacion de velocidad existente.
+
+QUE SE CONSERVA
+----------------
+- Policia A5.7: INVESTIGATION / SUSPECT / FUGITIVE y conocimiento por evidencia.
+- Plantilla policial, despacho, custodia, EMS, llamadas y unidades persistentes.
+- Carriles dirigidos A5.2 y prohibicion de inventar giros en U para recuperar.
+- Maniobras de estacionamiento y salida de garaje existentes; no se amplian
+  a marcha atras libre en una calle.
+- Controlador fisico de coches, dano, atropello, ragdoll y get-up existentes.
+- Modelos, texturas, esqueletos, UV, arte, project.godot y lanzadores.
+- No se incluye, modifica ni elimina ninguna partida del usuario.
+
+Se modifican seis scripts existentes, se agregan tres modulos de ejecucion
+local y una suite de pruebas aisladas. PROJECT_CONTEXT.md recibe una nota
+al principio; su contenido anterior queda conservado byte a byte debajo.
+No se crea otra simulacion de peatones, otra flota ni otro sistema de policia.
+
+LIMITES REALES DE ESTA ENTREGA
+------------------------------
+No se ejecuto Godot. La gramatica externa NO valida el tipado del motor,
+la importacion, las llamadas fisicas reales, las animaciones ni una partida.
+El RAR enviado tampoco contiene la biblioteca completa Modelos del juego.
+No se han medido FPS, picos, consumo de CPU o suavidad del movimiento.
+
+La busqueda local peatonal usa una cuadricula de 13x13, celdas de 0,65 m,
+un objetivo local de hasta 3,25 m y comprobaciones repartidas en pasos.
+No sustituye el mapa completo: una pared extensa, una puerta sin acceso,
+un objetivo dentro de una colision o una conexion vial inexistente pueden
+seguir requiriendo corregir geometria o el destino en lugar de esquivarlos.
+
+Un coche atrapado sin corredor delantero legal puede seguir esperando.
+No se lo gira, teletransporta ni hace atravesar cuerpos para aparentar una
+recuperacion. A5.8 no agrega marcha atras de rescate en la calzada ni arregla
+road_028/ramales sin retorno pendientes de A5.2/A5.7.
+
+Los sondeos son aproximaciones al volumen y al giro. El detector de suelo y
+los margenes requieren comprobarse con tus colisiones reales, puertas y
+cordones. Los dos controladores limitan consultas por fotograma; alcanzar
+el presupuesto causa espera breve, no permiso de paso. Ese limite NO prueba
+que se mantenga el objetivo de rendimiento.
+
+COMPROBACIONES EJECUTADAS AQUI
+------------------------------
+- Integridad del RAR: 888 archivos extraidos, tamanos y CRC32 coincidentes.
+- Base A5.7: 55 entradas presentes del ZIP previo identicas en el RAR.
+  Las entradas ausentes eran documentacion previa, no scripts de ejecucion.
+- 881 de los 888 archivos originales quedan sin cambios; los siete cambios
+  son los seis scripts y la nota de contexto. Los archivos nuevos son aparte.
+- Analisis con una gramatica externa Lark adaptada de GDToolkit: los diez
+  scripts nuevos/modificados, incluida la suite aislada, pasan esa gramatica.
+  Total: 265/268 scripts aceptados. Los otros tres tienen construcciones
+  lambda previas no admitidas por esa gramatica y no fueron modificados:
+  body_secondary_motion.gd, player_menu.gd y world_sleep.gd.
+- 38 comprobaciones de modelos INDEPENDIENTES de logica/geometria y guardas
+  sobre el codigo: frenado, limites de carril, arbitraje, busqueda acotada,
+  bloqueos temporales y puntos de integracion. Todas pasan.
+- Esos modelos incluyen 30.001 distancias de frenado, 5.000 integraciones de
+  parada y 1.000 permutaciones de llegada simultanea. NO son pruebas fisicas
+  de NPCs/coches en Godot ni sustituyen la suite nativa.
+- ZIP acumulativo, hashes, solapamiento con la copia enviada y restauracion
+  de los siete archivos preexistentes modificados se comprueban al empaquetar.
+
+Documentacion/Parche_A5_8/verificaciones.json distingue lo ejecutado de lo
+NO ejecutado. manifest.json y CAMBIOS_A5_8.diff.txt permiten inspeccionar
+los archivos exactos. QA contiene resultados y los modelos independientes.
+
+PRUEBA PRIORITARIA EN TU JUEGO
+------------------------------
+Usa una COPIA del guardado problematico, no borres el original.
+A. Dos NPCs cruzandose, una puerta estrecha y acercamiento a un coche:
+   comprobar rodeo, espera y continuidad; no atraviesan objetos ni aparecen
+   en otro lugar. Prueba un interior ademas de la calle.
+B. Dos coches ya dentro del cruce: observar que uno intenta despejarlo y
+   que los que llegan de fuera esperan. La prioridad no ignora colisiones.
+C. Coche detenido delante de otro, peaton cruzando y coche estacionado:
+   distinguir cola/frenado de un rodeo fisicamente posible. Quitar el
+   obstaculo debe permitir continuar, sin exigir reiniciar la partida.
+D. Repetir una detencion A5.7: escolta al mismo patrullero, embarque,
+   conduccion y entrega; probar tambien respuesta EMS y patrulla.
+E. Guardar/cargar durante una espera y comprobar identidades, ocupantes,
+   destino y fase. Las decisiones locales se reconstruyen, no se duplican.
+F. Comparar rendimiento con A5.7 en el mismo sitio y poblacion. Un atasco
+   resuelto con caidas severas de FPS no cuenta como resultado aceptado.
+
+DIAGNOSTICO OPCIONAL (SIN NUEVO CMD)
+-----------------------------------
+Cada actor/coche expone metadatos a58_navigation: estado, tiempo sin avance
+y, para coches, espacio/limite de velocidad. Con --a5-8-diagnostics al final
+de los argumentos de usuario se registran cambios de estado vehiculares,
+no una linea por fotograma. No esta activado por el launcher normal.
+
+La suite nativa incluida NO se ejecuto aqui. Puede lanzarse con el Godot
+4.4.1 ya usado por tu proyecto, desde PowerShell situado en la raiz:
+
+$engine = "C:\Users\Nico\OneDrive\Documents\Godot 4\Godot_v4.4.1-stable_win64.exe"
+& $engine --headless --path . --script res://Sistema/Pruebas_A5_8/navigation_recovery_tests.gd
+
+El camino del ejecutable procede de tu Sistema/abrir.ps1; ajustarlo solo
+si lo cambiaste de lugar. Esta suite no abre main_menu ni lee/escribe
+user://. Contiene pruebas de los modulos reales con consultas simuladas y
+un escenario fisico pequeno de pared/suelo. Un resultado correcto tampoco
+certifica por si solo toda la partida. Para regresion del router conservar
+ademas Sistema/Pruebas_A5_2/directed_lane_tests.gd, sin cambios.
+
+REVERSION
+----------
+Cierra juego/editor y extrae sobre la misma copia experimental:
+Documentacion/Parche_A5_8/Volver_a_A5_7_codigo.zip
+
+Restaura exactamente los siete archivos originales modificados. Los tres
+modulos nuevos ya no quedan referenciados por el juego restaurado. Pueden
+quedarse sin uso, o eliminarse JUNTO con Sistema/Pruebas_A5_8; consulta el
+LEEME de la reversion. La documentacion A5.8 puede conservarse como registro.
+
+La reversion es de CODIGO, NO de PARTIDA. Para comparar con el estado A5.7
+original, restaura tambien el respaldo de guardado previo a esta prueba.
+======================================================================

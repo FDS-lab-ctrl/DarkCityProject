@@ -1,0 +1,21 @@
+DARK CITY - A5.2 ACUMULATIVO SOBRE A5.1
+Rutas dirigidas: el destino detras requiere un recorrido por intersecciones,
+no una vuelta en U improvisada en mitad de una cuadra.
+
+Cierra el juego y extrae ESTE paquete sobre la COPIA EXPERIMENTAL.
+Reemplaza los archivos respetando las carpetas. Incluye todos los parches
+anteriores desde A1.1 hasta A5.1, ademas de A5.2.
+NO contiene el juego completo: se instala sobre la copia del proyecto.
+
+Puedes seguir abriendo Play Dark City.cmd.
+Probar A5.2.cmd abre el juego y captura registros en A5_2_Diagnostico.
+Comprobar A5.2.cmd ejecuta pruebas unitarias del router con tu Godot.
+
+No se ejecuto Godot aqui: este paquete requiere tu prueba en runtime.
+Respaldar las partidas. La copia experimental puede compartirlas con el original.
+
+Reversion: cerrar el juego y extraer
+Documentacion/Parche_A5_2/Volver_a_A5_1_codigo.zip
+sobre la copia. Restaura codigo, NO partidas.
+
+Detalle y limitaciones: Documentacion/Parche_A5_2/INFORME_A5_2.txt
